@@ -130,6 +130,27 @@ int registro_eliminar(const std::string& nombreFichero, Pred predicado){
     }
 }
 
+template<typename T>
+bool registro_leer(const std::string& nombreFichero, int posicion, T& registro){
+    std::ifstream entrada(nombreFichero, std::ios_base::binary);
+    if(entrada.is_open()){
+        entrada.seekg(posicion);
+        if(entrada.read(reinterpret_cast<char*>(&registro), sizeof(T))){
+            return true;
+        }
+        else{
+            std::cerr<<"Error al leer fichero. Error de formato?"<<std::endl;
+            return false;
+        }
+    }
+    else{
+        std::cerr<<"No es posible abrir '"<<nombreFichero<<"' para lectura."<<std::endl;
+        return false;
+    }
+}
+
 void leer_cadena(const char* mensaje, char* cadena, size_t tamanio);
+
+bool confirmar_accion(const char* mensaje);
 
 #endif

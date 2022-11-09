@@ -27,7 +27,33 @@ void sistema_listar_productos(){
 
 void sistema_editar_producto(){
     Producto producto;
-    
+    int codigo;
+    std::cout<<"---EDITAR PRODUCTO---\n";
+    leer("Ingrese codigo de producto: ", codigo);
+    auto predicado= [codigo](const Producto& producto){ return codigo== producto.codigo; };
+    int posicion= registro_si_existe<Producto>(FICHERO_PRODUCTOS, predicado);
+    if(posicion== EOF){
+        std::cout<<"El producto no se encuentra registrado."<<std::endl;
+    }
+    else{
+        if(registro_leer(FICHERO_PRODUCTOS, posicion, producto)){
+            if(producto_cambiar(producto)){
+                if(registro_actualizar(FICHERO_PRODUCTOS, producto, predicado)){
+                    std::cout<<"Registro modificado correctamente."<<std::endl;
+                }
+                else{
+                    std::cerr<<"Error al guardar cambios..."<<std::endl;
+                }
+            }
+            else{
+                std::cout<<"Se sale sin cambios."<<std::endl;
+            }
+        }
+        else{
+            std::cerr<<"Error en la lectura de fichero."<<std::endl;
+        }
+    }
+    system("pause");
 }
 
 void sistema_aplicacion()

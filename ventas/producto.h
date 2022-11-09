@@ -3,7 +3,7 @@
 
 #include<string>
 
-const int TAMANIO_NOMBRE_PROD= 30;
+const int TAMANIO_NOMBRE_PROD= 20;
 const std::string FICHERO_PRODUCTOS= "productos.dat";
 
 struct Producto{
@@ -23,5 +23,7 @@ bool producto_existe_codigo(int codigo);
 void producto_guardar_nuevo(const Producto& producto);
 
 int producto_imprimir_tabular(std::ostream& salida);
+
+bool producto_cambiar(Producto& producto);
 
 #endif

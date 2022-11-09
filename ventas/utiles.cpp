@@ -19,3 +19,21 @@ void leer_cadena(const char* mensaje, char* cadena, size_t tamanio){
         std::cin.ignore(1024000, '\n');
     }while(true);
 }
+
+bool confirmar_accion(const char* mensaje){
+    do{
+        int opcion;
+        std::cout<<mensaje<<"\n";
+        std::cout<<"  1. SI     2. NO\n";
+        leer("Ingrese opcion: ", opcion);
+        if(opcion== 1){
+            return true;
+        }
+        else if(opcion== 2){
+            return false;
+        }
+        else{
+            std::cout<<"Opcion incorrecta..."<<std::endl;
+        }
+    }while(true);
+}
