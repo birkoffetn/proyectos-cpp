@@ -18,6 +18,8 @@ void producto_leer_codigo(const char* mensaje, Producto& producto);
 
 void producto_leer_datos(const char* mensaje, Producto& producto);
 
+void producto_ver_venta(const Producto& producto);
+
 bool producto_existe_codigo(int codigo);
 
 void producto_guardar_nuevo(const Producto& producto);

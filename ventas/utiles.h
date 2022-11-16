@@ -149,6 +149,18 @@ bool registro_leer(const std::string& nombreFichero, int posicion, T& registro){
     }
 }
 
+template<typename T>
+int registro_contar_registros(const std::string& nombreFichero){
+    std::ifstream entrada(nombreFichero, std::ios_base::ate | std::ios_base::binary);
+    if(entrada.is_open()){
+        return entrada.tellg()/ sizeof(T);
+    }
+    else{
+        std::cerr<<"No se puede abrir '"<<nombreFichero<<"' para lectura."<<std::endl;
+        return EOF;
+    }
+}
+
 void leer_cadena(const char* mensaje, char* cadena, size_t tamanio);
 
 bool confirmar_accion(const char* mensaje);

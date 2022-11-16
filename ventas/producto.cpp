@@ -16,6 +16,14 @@ void producto_leer_datos(const char* mensaje, Producto& producto){
     leer       ("Stock : ", producto.stock);
 }
 
+void producto_ver_venta(const Producto& producto){
+    std::cout<<"----------------------------\n";
+    std::cout<<"Nombre: "<<producto.nombre<<"\n";
+    std::cout<<"Precio: "<<producto.precio<<"\n";
+    std::cout<<"Stock : "<<producto.stock<<"\n";
+    std::cout<<"----------------------------\n";
+}
+
 bool producto_existe_codigo(int codigo){
     auto predicado= [codigo](const Producto& producto){ return codigo== producto.codigo; };
     int posicion= registro_si_existe<Producto>(FICHERO_PRODUCTOS, predicado);

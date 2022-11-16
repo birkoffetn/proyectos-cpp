@@ -1,0 +1,2 @@
+#Proyecto
+El proyecto desarrollado en C++ deberá incluir un menu de opciones, para realizar altas, bajas, cambios, ordenar(por el ID), respaldo de agenda en archivo fisico y cargar informacion a la lista(maximo 100 elementos). La estructura dberá contar con los siguientes campos: ID, RFC, NOMBRE, APELLIDOS, TELEFONO, CELULAR, CORREO ELECTRÓNICO, FECHA DE NACIMIENTO. El tipo de archivo a utilizar será definido por el equipo.
