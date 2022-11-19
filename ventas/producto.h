@@ -14,6 +14,15 @@ struct Producto{
     int stock;
 };
 
+struct ExisteCodigo{
+    ExisteCodigo(int codigo): codigo(codigo){}
+    bool operator()(const Producto& producto){
+        return codigo== producto.codigo;
+    }
+private:
+    int codigo;
+};
+
 void producto_leer_codigo(const char* mensaje, Producto& producto);
 
 void producto_leer_datos(const char* mensaje, Producto& producto);
@@ -27,5 +36,9 @@ void producto_guardar_nuevo(const Producto& producto);
 int producto_imprimir_tabular(std::ostream& salida);
 
 bool producto_cambiar(Producto& producto);
+
+bool producto_cargar(int codigo, Producto& producto);
+
+void producto_imprimir(const Producto& producto);
 
 #endif

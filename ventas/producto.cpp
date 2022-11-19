@@ -93,3 +93,23 @@ bool producto_cambiar(Producto& producto){
     }
     return actualizado;
 }
+
+bool producto_cargar(int codigo, Producto& producto){
+    bool cargado;
+    int posicion= registro_si_existe<Producto>(FICHERO_PRODUCTOS, ExisteCodigo(codigo));
+    if(posicion!= EOF){
+        registro_leer(FICHERO_PRODUCTOS, posicion, producto);
+        cargado= true;
+    }
+    else{
+        cargado= false;
+    }
+    return cargado;
+}
+
+void producto_imprimir(const Producto& producto){
+    std::cout<<"Nombre: "<<producto.nombre<<"\n";
+    std::cout<<"Stock-: "<<producto.stock<<"\n";
+    std::cout<<"Costo-: "<<producto.costo<<"\n";
+    std::cout<<"Precio: "<<producto.precio<<"\n";
+}

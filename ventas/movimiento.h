@@ -1,6 +1,8 @@
 #ifndef __MOVIMIENTO__H__
 #define __MOVIMIENTO__H__
 
+#include<string>
+
 const int TAMANIO_DETALLE= 20;
 const int TIPO_VENTA= 1;
 const int TIPO_COMPRA= 2;
@@ -22,5 +24,7 @@ void movimiento_leer_datos(Movimiento& movimiento);
 void movimiento_imprimir(const Movimiento& movimiento);
 
 void movimiento_guardar_movimiento(const Movimiento& movimiento, const Detalle detalles[]);
+
+void movimiento_imprimir(std::ostream& salida, const Movimiento& movimiento, const Detalle detalles[]);
 
 #endif

@@ -61,27 +61,31 @@ void sistema_editar_producto(){
 }
 
 int sistema_leer_venta(Movimiento& movimiento, Detalle detalles[]){
-    int contador= 0;
     int opcion;
     do{
-        leer("1. Agregar producto\n2. Terminar\n-------\nopcion: ", opcion);
+        movimiento_imprimir(std::cout, movimiento, detalles);
+        leer("1. Agregar producto\n2. Terminar\n------------\nopcion: ", opcion);
         if(opcion== 1){
             Producto producto;
+            int cantidad;
             producto_leer_codigo("Ingrese codigo de producto: ", producto);
-            auto predicado= [&producto](const Producto& prod){ return prod.codigo== producto.codigo; };
-            int posicion= registro_si_existe<Producto>(FICHERO_PRODUCTOS, predicado);
-            if(posicion!= EOF){
-                registro_leer(FICHERO_PRODUCTOS, posicion, producto);
-                producto_ver_venta(producto);
-                leer("Ingrese cantidad a vender", detalles[contador].cantidad);
-                if(detalles[contador].cantidad> producto.stock){
-                    std::cout<<"No hay suficientes existencias..."<<std::endl;
+            if(producto_cargar(producto.codigo, producto)){
+                std::cout<<"-----------------\n";
+                producto_imprimir(producto);
+                std::cout<<"-----------------\n";
+                leer("Ingrese cantidad: ", cantidad);
+                if(cantidad> producto.stock){
+                    std::cout<<"No hay existencias suficientes."<<std::endl;
                 }
                 else{
-                    detalle_leer_venta(producto, detalles[contador]);
-                    std::cout<<"Registrado exitosamente..."<<std::endl;
-                    ++contador;
+                    detalle_de_venta(detalles[movimiento.cantidadRegistros], producto);
+                    detalles[movimiento.cantidadRegistros].cantidad= cantidad;
+                    ++movimiento.cantidadRegistros;
+                    std::cout<<"Producto agregado exitosamente."<<std::endl;
                 }
+            }
+            else{
+                std::cout<<"No hay producto registrado con el codigo introducido"<<std::endl;
             }
         }
         else if(opcion== 2){
@@ -90,33 +94,67 @@ int sistema_leer_venta(Movimiento& movimiento, Detalle detalles[]){
         else{
             std::cout<<"Opcion incorrecta, intente de nuevo."<<std::endl;
         }
+        system("pause");
     }while(opcion!= 2);
-    return contador;
+    return movimiento.cantidadRegistros;
 }
 
 int sistema_leer_compra(Movimiento& movimiento, Detalle detalles[]){
-    return 0;
+    int opcion;
+    do{
+        movimiento_imprimir(std::cout, movimiento, detalles);
+        leer("1. Agregar producto\n2. Terminar\n------------\nopcion: ", opcion);
+        if(opcion== 1){
+            Producto producto;
+            int cantidad;
+            producto_leer_codigo("Ingrese codigo de producto: ", producto);
+            if(producto_cargar(producto.codigo, producto)){
+                std::cout<<"-----------------\n";
+                producto_imprimir(producto);
+                std::cout<<"-----------------\n";
+                leer("Ingrese cantidad: ", cantidad);
+                detalle_de_compra(detalles[movimiento.cantidadRegistros], producto);
+                detalles[movimiento.cantidadRegistros].cantidad= cantidad;
+                ++movimiento.cantidadRegistros;
+                std::cout<<"Producto agregado exitosamente."<<std::endl;
+            }
+            else{
+                std::cout<<"No hay producto registrado con el codigo introducido"<<std::endl;
+            }
+        }
+        else if(opcion== 2){
+            std::cout<<"Seleccion de porductos terminada."<<std::endl;
+            movimiento_guardar_movimiento(movimiento, detalles);
+            std::cout<<"Movimiento guardado"<<std::endl;
+        }
+        else{
+            std::cout<<"Opcion incorrecta, intente de nuevo."<<std::endl;
+        }
+        system("pause");
+    }while(opcion!= 2);
+    return movimiento.cantidadRegistros;
 }
 
 void sistema_efectuar_movimiento(){
     Movimiento movimiento;
-    int numeroProductos;
     Detalle detalles[MAX_DETALLE];
+
     std::cout<<"Ingrese los datos del movimiento a realizar:\n";
     movimiento_leer_datos(movimiento);
     if(movimiento.tipo== TIPO_VENTA){
-        numeroProductos= sistema_leer_venta(movimiento, detalles);
+        sistema_leer_venta(movimiento, detalles);
     }
     else{
-        numeroProductos= sistema_leer_compra(movimiento, detalles);
+        sistema_leer_compra(movimiento, detalles);
     }
-    if(numeroProductos> 0){
-        
+    if(movimiento.cantidadRegistros> 0){
+        movimiento_guardar_movimiento(movimiento, detalles);
+        std::cout<<"Movimiento guardado exitosamente."<<std::endl;
     }
-    movimiento.id= registro_contar_registros<Movimiento>(FICHERO_MOVIMIENTO);
-    movimiento.indiceDetalle= registro_contar_registros<Detalle>(FICHERO_DETALLE)* sizeof(Detalle);
-    movimiento.cantidadRegistros= numeroProductos;
-    
+    else{
+        std::cout<<"No hay registros a guardar"<<std::endl;
+    }
+    system("pause");
 }
 
 void sistema_aplicacion()

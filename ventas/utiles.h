@@ -157,7 +157,7 @@ int registro_contar_registros(const std::string& nombreFichero){
     }
     else{
         std::cerr<<"No se puede abrir '"<<nombreFichero<<"' para lectura."<<std::endl;
-        return EOF;
+        return 0;
     }
 }
 
