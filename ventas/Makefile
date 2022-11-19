@@ -1,7 +1,7 @@
 CXXFLAGS= -Wall -ggdb
 SOURCES= $(wildcard *.cpp)
 OBJECTS= $(patsubst %.cpp,%.o,$(SOURCES))
-BIN= main
+BIN= ventas
 
 all: $(BIN)
 
@@ -15,4 +15,4 @@ $(BIN): $(OBJECTS)
 	$(CXX) $^ -o $@
 
 clean:
-	$(RM) main $(OBJECTS)
+	$(RM) $(BIN) $(OBJECTS)
