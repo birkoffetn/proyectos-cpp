@@ -16,13 +16,36 @@ template <typename K, typename T>
 class Crud
 {
 public:
+    Crud(const std::string &filename) : file(filename)
+    {
+        std::ifstream in(fileName(), std::ios::binary);
+        if (in.is_open())
+        {
+            T data;
+            std::streampos pos = in.tellg();
+            while (in.read((char *)&data, sizeof(T)))
+            {
+                dict.insert(std::make_pair(data.id, pos));
+                addData(data, pos);
+                pos = in.tellg();
+            }
+        }
+        else
+        {
+            std::ofstream out(fileName(), std::ios::binary | std::ios::app);
+            assert(out.is_open());
+        }
+    }
+
+    virtual ~Crud() {}
+
     /**
      * @brief Esta funcion debe ser sobrecargada en sus subclases con el nombre de fichero
      * donde se guardaran los registros
      *
      * @return const std::string& Nombre de fichero
      */
-    virtual const std::string &fileName() const = 0;
+    const std::string &fileName() const { return file; }
 
     /**
      * @brief Guarda un nuevo registro y lo agrega al indice de fichero
@@ -39,9 +62,17 @@ public:
         }
         std::ofstream out(fileName(), std::ios::app | std::ios::binary | std::ios::ate | std::ios::in);
         assert(out.is_open());
-        dict.insert(std::make_pair(data.id, out.tellp()));
-        out.write((const char *)&data, sizeof(T));
-        return true;
+        auto pos = out.tellp();
+        if (addData(data, pos))
+        {
+            dict.insert(std::make_pair(data.id, pos));
+            out.write((const char *)&data, sizeof(T));
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     /**
@@ -123,28 +154,13 @@ public:
     }
 
 protected:
-    Crud() {}
-    void makeIndex()
+    virtual bool addData(const T &, std::streampos)
     {
-        std::ifstream in(fileName(), std::ios::binary);
-        if (in.is_open())
-        {
-            T data;
-            std::streampos pos = in.tellg();
-            while (in.read((char *)&data, sizeof(T)))
-            {
-                dict.insert(std::make_pair(data.id, pos));
-                pos = in.tellg();
-            }
-        }
-        else
-        {
-            std::ofstream out(fileName(), std::ios::binary | std::ios::app);
-            assert(out.is_open());
-        }
+        return true;
     }
 
 private:
+    std::string file;
     std::map<K, std::streampos> dict;
 };
 
